@@ -8,3 +8,9 @@ export interface ITodoListItem {
   text: string;
   isDone: boolean;
 }
+
+export const createTodoListItem = (text: string): ITodoListItem => ({
+  text,
+  isDone: false,
+  id: Math.random().toString(), // TODO: use guid?
+});

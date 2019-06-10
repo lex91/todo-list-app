@@ -10,8 +10,10 @@ const AddTodo: React.FC<IProps> = ({ onSubmit }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = useCallback((): void => {
-    onSubmit(inputValue);
-    setInputValue('');
+    if (inputValue) {
+      onSubmit(inputValue);
+      setInputValue('');
+    }
   }, [onSubmit, inputValue]);
 
   const handleInputChange = useCallback(

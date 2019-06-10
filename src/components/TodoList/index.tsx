@@ -3,7 +3,7 @@ import { Paper, makeStyles, Theme, List } from '@material-ui/core';
 
 import AddTodo from 'components/AddTodo';
 import TodoItem from 'components/TodoItem';
-import { ITodoList } from 'entities';
+import { ITodoList } from 'models';
 
 interface IProps {
   list: ITodoList;
