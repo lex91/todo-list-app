@@ -1,5 +1,6 @@
 {
   "name": "todo-list-app",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,6 +12,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.0.9",
     "@types/redux-logger": "^3.0.7",
+    "firebase": "^6.1.1",
     "husky": "^2.4.0",
     "lint-staged": "^8.2.0",
     "prettier": "^1.17.1",
