@@ -1,4 +1,5 @@
-import { initializeApp } from 'firebase';
+import app from 'firebase/app';
+import 'firebase/firestore';
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -10,4 +11,6 @@ const config = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-export default initializeApp(config);
+app.initializeApp(config);
+
+export const firestore = app.firestore();

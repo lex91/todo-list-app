@@ -1,6 +1,11 @@
-import { ITodoList } from 'models';
+import { ITodoList } from 'models/todoList';
+import { WithHash } from 'utils/hashable';
 
 export interface IState {
-  active: ITodoList | null;
-  byId: { [id: string]: ITodoList };
+  [id: string]: {
+    local?: ITodoList;
+    remote?: WithHash<ITodoList>;
+    // queued?: ITodoList;
+    // pending?: WithHash<ITodoList>;
+  };
 }

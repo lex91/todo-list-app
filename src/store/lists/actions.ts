@@ -1,9 +1,28 @@
 import { ActionType, createStandardAction } from 'typesafe-actions';
 
-import { createTodoListItem } from 'models';
+const createTodoList = createStandardAction('@todo/lists/createTodoList')<string>();
 
-export const addTodo = createStandardAction('@todo/ADD_TODO').map((text: string) => ({
-  payload: createTodoListItem(text),
-}));
+const addTodo = createStandardAction('@todo/lists/addTodo')<{
+  listId: string;
+  todoId: string;
+  text: string;
+}>();
 
-export type IActionType = ActionType<typeof addTodo>;
+const deleteTodo = createStandardAction('@todo/lists/deleteTodo')<{
+  listId: string;
+  todoId: string;
+}>();
+
+const toggleTodo = createStandardAction('@todo/lists/toggleTodo')<{
+  listId: string;
+  todoId: string;
+}>();
+
+export const actions = {
+  createTodoList,
+  addTodo,
+  deleteTodo,
+  toggleTodo,
+};
+
+export type IActionType = ActionType<typeof actions>;

@@ -1,4 +1,4 @@
-import { IRootAction } from './action';
+import { IRootAction } from './types';
 
 declare module 'typesafe-actions' {
   interface Types {

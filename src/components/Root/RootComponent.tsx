@@ -3,25 +3,15 @@ import React from 'react';
 import AppLayout from 'components/AppLayout';
 import TopBar from 'components/TopBar';
 import TodoList from 'components/TodoList';
+import { store } from 'store';
+import { actions } from 'store/lists';
 
 interface IProps {}
 
+store.dispatch(actions.createTodoList('test1'));
+
 const RootComponent: React.FC<IProps> = () => (
-  <AppLayout
-    topBar={<TopBar />}
-    content={
-      <TodoList
-        list={{
-          id: '123',
-          items: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => ({
-            id: String(i),
-            text: `TODO #${i}`,
-            isDone: Boolean(i % 3),
-          })),
-        }}
-      />
-    }
-  />
+  <AppLayout topBar={<TopBar />} content={<TodoList listId="test1" />} />
 );
 
 export default RootComponent;
