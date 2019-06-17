@@ -3,15 +3,14 @@ import { createReducer } from 'typesafe-actions';
 import { createHashable } from 'utils/hashable';
 
 import { actions } from './actions';
-import { IState } from './types';
+import { IListsState } from './types';
 
-const initialState: IState = {};
+const initialState: IListsState = {};
 
 export default createReducer(initialState)
   .handleAction(actions.createTodoList, (state, { payload: id }) => {
     const isListExists = Boolean(state[id]);
     if (isListExists) {
-      console.warn('list exists');
       return state;
     }
 
@@ -19,13 +18,112 @@ export default createReducer(initialState)
       ...state,
       [id]: {
         local: createHashable({ id, items: [] }),
+        hasLocalChanges: true,
       },
     };
   })
+  .handleAction(actions.saveTodoList.request, (state, { payload: list }) => {
+    const id = list.data.id;
+    const listState = state[id];
+
+    if (!listState || !listState.local) {
+      return state;
+    }
+
+    return {
+      ...state,
+      [id]: {
+        ...listState,
+        list,
+        hasLocalChanges: false,
+      },
+    };
+  })
+  .handleAction(actions.saveTodoList.success, (state, { payload: list }) => {
+    const id = list.data.id;
+    const listState = state[id];
+
+    if (!listState || !listState.pending) {
+      return state;
+    }
+
+    return {
+      ...state,
+      [id]: {
+        ...listState,
+        pending: undefined,
+        remote: list,
+      },
+    };
+  })
+  .handleAction(actions.saveTodoList.failure, (state, { payload: list }) => {
+    const id = list.data.id;
+    const listState = state[id];
+
+    if (!listState || !listState.pending) {
+      return state;
+    }
+
+    return {
+      ...state,
+      [id]: {
+        ...listState,
+        pending: undefined,
+        hasLocalChanges: true,
+      },
+    };
+  })
+  .handleAction(actions.updateRemoteTodoList, (state, { payload: { listId, remoteState } }) => {
+    const listState = state[listId];
+    if (!listState) {
+      return state;
+    }
+
+    const hasRemoteChanges =
+      listState.remote &&
+      listState.local &&
+      listState.hasLocalChanges &&
+      !(
+        listState.remote._hash === remoteState._hash ||
+        (listState.pending && listState.pending._hash === remoteState._hash) ||
+        listState.local._hash === remoteState._hash
+      );
+
+    return {
+      ...state,
+      [listId]: {
+        ...listState,
+        remote: remoteState,
+        hasRemoteChanges,
+        local: hasRemoteChanges ? listState.local : remoteState,
+      },
+    };
+  })
+  .handleAction(actions.waitForRemoteTodoList, (state, { payload: id }) => {
+    const isListExists = Boolean(state[id]);
+    if (isListExists) {
+      return state;
+    }
+
+    return {
+      ...state,
+      [id]: {},
+    };
+  })
+  .handleAction(actions.clearListState, (state, { payload: id }) =>
+    Object.entries(state)
+      .filter(([key]) => key !== id)
+      .reduce(
+        (acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        },
+        {} as IListsState,
+      ),
+  )
   .handleAction(actions.addTodo, (state, { payload: { listId, todoId, text } }) => {
     const list = state[listId] && state[listId].local;
     if (!list) {
-      console.warn('no list');
       return state;
     }
 
@@ -46,13 +144,13 @@ export default createReducer(initialState)
           id: listId,
           items,
         }),
+        hasLocalChanges: true,
       },
     };
   })
   .handleAction(actions.deleteTodo, (state, { payload: { listId, todoId } }) => {
     const list = state[listId] && state[listId].local;
     if (!list) {
-      console.warn('no list');
       return state;
     }
 
@@ -66,13 +164,13 @@ export default createReducer(initialState)
           id: listId,
           items,
         }),
+        hasLocalChanges: true,
       },
     };
   })
   .handleAction(actions.toggleTodo, (state, { payload: { listId, todoId } }) => {
     const list = state[listId] && state[listId].local;
     if (!list) {
-      console.warn('no list');
       return state;
     }
 
@@ -94,6 +192,7 @@ export default createReducer(initialState)
           id: listId,
           items,
         }),
+        hasLocalChanges: true,
       },
     };
   });
