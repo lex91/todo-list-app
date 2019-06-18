@@ -34,7 +34,7 @@ export default createReducer(initialState)
       ...state,
       [id]: {
         ...listState,
-        list,
+        pending: list,
         hasLocalChanges: false,
       },
     };
@@ -79,10 +79,11 @@ export default createReducer(initialState)
       return state;
     }
 
+    const shouldReplaceLocalState = !listState.hasLocalChanges && !listState.pending;
     const hasRemoteChanges =
       listState.remote &&
       listState.local &&
-      listState.hasLocalChanges &&
+      !shouldReplaceLocalState &&
       !(
         listState.remote._hash === remoteState._hash ||
         (listState.pending && listState.pending._hash === remoteState._hash) ||
@@ -95,7 +96,7 @@ export default createReducer(initialState)
         ...listState,
         remote: remoteState,
         hasRemoteChanges,
-        local: hasRemoteChanges ? listState.local : remoteState,
+        local: shouldReplaceLocalState ? remoteState : listState.local,
       },
     };
   })

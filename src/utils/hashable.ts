@@ -33,7 +33,7 @@ export const isHashed = <T extends object>(it: any): it is WithHash<IHashable<T>
 export const hash = <T>(data: T): WithHash<T> =>
   cloneDeepWith(data, item => {
     if (isHashable(item) && item._hash === null) {
-      const clonedData = hash(data) as object;
+      const clonedData = hash(item.data);
 
       return {
         _hash: calcHashForObject(clonedData),
