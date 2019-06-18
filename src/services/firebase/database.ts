@@ -3,7 +3,10 @@ import { WithHash } from 'utils/hashable';
 
 import { firestore as db } from './app';
 
-export const setList = async (nextState: WithHash<ITodoList>, prevStateHash?: string) =>
+export const setList = async (
+  nextState: WithHash<ITodoList>,
+  prevStateHash?: string,
+): Promise<void> =>
   db.runTransaction(async transaction => {
     const itemRef = db.collection('lists').doc(nextState.data.id);
 
@@ -28,12 +31,15 @@ export const getList = async (id: string): Promise<WithHash<ITodoList> | null> =
   return snapshot.exists ? (snapshot.data() as WithHash<ITodoList>) : null;
 };
 
-export const watchList = (id: string, onUpdate: (list: WithHash<ITodoList>) => void) => {
-  db.collection('lists')
+export const watchList = (
+  id: string,
+  onUpdate: (list: WithHash<ITodoList>) => void,
+): (() => void) =>
+  db
+    .collection('lists')
     .doc(id)
     .onSnapshot(snapshot => {
       if (snapshot.exists) {
         onUpdate(snapshot.data() as WithHash<ITodoList>);
       }
     });
-};
