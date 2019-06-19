@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'store';
+import { selectTrackedListIds } from 'store/lists';
+
 import SingleListSync from './SingleListSync';
 
 const actionCreators = {};
@@ -26,5 +28,5 @@ const ListsSync: React.FC<IProps> = ({ listIds }) => {
 };
 
 export default connect<IStateProps, IDispatchProps, IOwnProps, IRootState>(state => ({
-  listIds: Object.keys(state.lists),
+  listIds: selectTrackedListIds(state),
 }))(ListsSync);

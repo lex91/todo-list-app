@@ -15,3 +15,12 @@ export const selectRemoteTodoList = (
   const dataForId = state.lists[listId];
   return dataForId && dataForId.remote;
 };
+
+export const selectTrackedListIds = (state: IRootState): string[] => Object.keys(state.lists);
+
+export const selectShouldSaveList = (state: IRootState, listId: string): boolean => {
+  const dataForId = state.lists[listId];
+  return Boolean(
+    dataForId && dataForId.hasLocalChanges && !dataForId.hasRemoteChanges && !dataForId.pending,
+  );
+};

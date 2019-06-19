@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 import { IRootState } from 'store';
-import { epics } from 'store/lists';
+import { epics, selectShouldSaveList } from 'store/lists';
 
 const actionCreators = {
   watchList: epics.watchList,
@@ -35,13 +35,8 @@ const ListSync: React.FC<IProps> = ({ listId, shouldSave, watchList, saveList })
 };
 
 export default connect<IStateProps, IDispatchProps, IOwnProps, IRootState>(
-  (state, ownProps) => {
-    const listState = state.lists[ownProps.listId]!;
-    return {
-      shouldSave: Boolean(
-        listState.hasLocalChanges && !listState.hasRemoteChanges && !listState.pending,
-      ),
-    };
-  },
+  (state, ownProps) => ({
+    shouldSave: selectShouldSaveList(state, ownProps.listId),
+  }),
   dispatch => bindActionCreators(actionCreators, dispatch),
 )(ListSync);
