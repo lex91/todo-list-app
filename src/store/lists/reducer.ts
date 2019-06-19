@@ -73,7 +73,8 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.updateRemoteTodoList, (state, { payload: { listId, remoteState } }) => {
+  .handleAction(actions.updateRemoteTodoList, (state, { payload: remoteState }) => {
+    const listId = remoteState.data.id;
     const listState = state[listId];
     if (!listState) {
       return state;

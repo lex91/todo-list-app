@@ -11,10 +11,9 @@ const saveTodoList = createAsyncAction(
   '@todo/lists/saveTodoList-failure',
 )<WithHash<ITodoList>, WithHash<ITodoList>, WithHash<ITodoList>>();
 
-const updateRemoteTodoList = createStandardAction('@todo/lists/updateRemoteTodoList')<{
-  listId: string;
-  remoteState: WithHash<ITodoList>;
-}>();
+const updateRemoteTodoList = createStandardAction('@todo/lists/updateRemoteTodoList')<
+  WithHash<ITodoList>
+>();
 
 const waitForRemoteTodoList = createStandardAction('@todo/lists/waitForRemoteTodoList')<string>();
 

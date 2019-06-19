@@ -4,7 +4,8 @@ import uuid from 'uuid/v4';
 
 import { ITodoList } from 'models/todoList';
 import { IRootState } from 'store';
-import { actions, selectLocalTodoList } from 'store/lists';
+import { actions } from 'store/lists';
+import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 
 import TodoListComponent from './TodoListComponent';
 
@@ -15,18 +16,18 @@ const actionCreators = {
 };
 
 interface IOwnProps {
-  listId: string;
+  list: ITodoList;
 }
 
-interface IStateProps {
-  list?: ITodoList;
-}
+interface IStateProps {}
 
-type IDispatchProps = typeof actionCreators;
+type IDispatchProps = IBoundActionCreators<typeof actionCreators>;
 
 interface IProps extends IOwnProps, IStateProps, IDispatchProps {}
 
-const TodoListContainer: React.FC<IProps> = ({ listId, list, addTodo, deleteTodo, toggleTodo }) => {
+const TodoListContainer: React.FC<IProps> = ({ list, addTodo, deleteTodo, toggleTodo }) => {
+  const listId = list.data.id;
+
   const handleAdd = useCallback((text: string) => addTodo({ listId, todoId: uuid(), text }), [
     listId,
     addTodo,
@@ -42,11 +43,6 @@ const TodoListContainer: React.FC<IProps> = ({ listId, list, addTodo, deleteTodo
     deleteTodo,
   ]);
 
-  if (!list) {
-    // TODO: add <NoDataComponent>
-    return null;
-  }
-
   return (
     <TodoListComponent
       list={list}
@@ -58,8 +54,6 @@ const TodoListContainer: React.FC<IProps> = ({ listId, list, addTodo, deleteTodo
 };
 
 export default connect<IStateProps, IDispatchProps, IOwnProps, IRootState>(
-  (state, ownProps) => ({
-    list: selectLocalTodoList(state, ownProps.listId),
-  }),
-  actionCreators,
+  null,
+  dispatch => bindActionCreators(actionCreators, dispatch),
 )(TodoListContainer);
