@@ -2,6 +2,7 @@ import { watchList as watchListDb, setList as setListDb } from 'services/firebas
 import { hash } from 'utils/hashable';
 import { IThunkAction } from 'utils/redux';
 
+import { selectLocalTodoList, selectRemoteTodoList } from './selectors';
 import { actions } from './actions';
 
 const watchList = (listId: string): IThunkAction<() => void> => dispatch =>
@@ -10,24 +11,31 @@ const watchList = (listId: string): IThunkAction<() => void> => dispatch =>
   );
 
 const saveList = (listId: string): IThunkAction<Promise<void>> => async (dispatch, getState) => {
-  const listState = getState().lists[listId];
-  if (!listState || !listState.local) {
+  const state = getState();
+
+  const localList = selectLocalTodoList(state, listId);
+  if (!localList) {
     return;
   }
 
-  const hashedLocalList = hash(listState.local);
-  const prevHash = listState.remote ? listState.remote._hash : undefined;
+  const remoteList = selectRemoteTodoList(state, listId);
+  const prevHash = remoteList ? remoteList._hash : undefined;
+  const hashedLocalList = hash(localList);
 
   dispatch(actions.saveTodoList.request(hashedLocalList));
 
+  let isTransactionSucceded = false;
   try {
-    await setListDb(hashedLocalList, prevHash);
+    isTransactionSucceded = await setListDb(hashedLocalList, prevHash);
   } catch (error) {
-    dispatch(actions.saveTodoList.failure(hashedLocalList));
-    return;
+    // Firebase Error, just leave `isTransactionSucceded` in false state
   }
 
-  dispatch(actions.saveTodoList.success(hashedLocalList));
+  if (isTransactionSucceded) {
+    dispatch(actions.saveTodoList.success(hashedLocalList));
+  } else {
+    dispatch(actions.saveTodoList.failure(hashedLocalList));
+  }
 };
 
 export const epics = {
