@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 
 import { IRootState } from 'store';
-import { epics, selectLocalTodoList } from 'store/lists';
+import { loadList, selectLocalTodoList } from 'store/lists';
 import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 import { ITodoList } from 'models/todoList';
 import AppLayout from 'components/AppLayout';
 import TopBar from 'components/TopBar';
 import TodoList from 'components/TodoList';
 
-const actionCreators = { loadList: epics.loadList };
+const actionCreators = { loadList };
 
 interface IOwnProps extends RouteComponentProps<{ id: string }> {}
 

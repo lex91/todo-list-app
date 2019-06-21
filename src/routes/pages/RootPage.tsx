@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import uuid from 'uuid/v4';
 
-import { actions } from 'store/lists';
+import { createTodoList } from 'store/lists';
 import { connect } from 'react-redux';
 
-const actionCreators = { createTodoList: actions.createTodoList };
+const actionCreators = { createTodoList };
 
 interface IOwnProps extends RouteComponentProps {}
 

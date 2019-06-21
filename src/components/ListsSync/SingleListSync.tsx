@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 
 import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 import { IRootState } from 'store';
-import { epics, selectShouldSaveList } from 'store/lists';
+import { watchList, saveList, selectShouldSaveList } from 'store/lists';
 
 const actionCreators = {
-  watchList: epics.watchList,
-  saveList: epics.saveList,
+  watchList,
+  saveList,
 };
 
 interface IOwnProps {

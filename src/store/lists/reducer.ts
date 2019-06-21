@@ -2,13 +2,22 @@ import { createReducer } from 'typesafe-actions';
 
 import { createHashable } from 'utils/hashable';
 
-import { actions } from './actions';
+import {
+  createTodoList,
+  saveTodoList,
+  toggleTodo,
+  deleteTodo,
+  addTodo,
+  updateRemoteTodoList,
+  clearListState,
+  waitForRemoteTodoList,
+} from './actions';
 import { IListsState } from './types';
 
 const initialState: IListsState = {};
 
 export default createReducer(initialState)
-  .handleAction(actions.createTodoList, (state, { payload: id }) => {
+  .handleAction(createTodoList, (state, { payload: id }) => {
     const isListExists = Boolean(state[id]);
     if (isListExists) {
       return state;
@@ -22,7 +31,7 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.saveTodoList.request, (state, { payload: list }) => {
+  .handleAction(saveTodoList.request, (state, { payload: list }) => {
     const id = list.data.id;
     const listState = state[id];
 
@@ -39,7 +48,7 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.saveTodoList.success, (state, { payload: list }) => {
+  .handleAction(saveTodoList.success, (state, { payload: list }) => {
     const id = list.data.id;
     const listState = state[id];
 
@@ -56,7 +65,7 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.saveTodoList.failure, (state, { payload: list }) => {
+  .handleAction(saveTodoList.failure, (state, { payload: list }) => {
     const id = list.data.id;
     const listState = state[id];
 
@@ -73,7 +82,7 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.updateRemoteTodoList, (state, { payload: remoteState }) => {
+  .handleAction(updateRemoteTodoList, (state, { payload: remoteState }) => {
     const listId = remoteState.data.id;
     const listState = state[listId];
     if (!listState) {
@@ -101,7 +110,7 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.waitForRemoteTodoList, (state, { payload: id }) => {
+  .handleAction(waitForRemoteTodoList, (state, { payload: id }) => {
     const isListExists = Boolean(state[id]);
     if (isListExists) {
       return state;
@@ -112,7 +121,7 @@ export default createReducer(initialState)
       [id]: {},
     };
   })
-  .handleAction(actions.clearListState, (state, { payload: id }) =>
+  .handleAction(clearListState, (state, { payload: id }) =>
     Object.entries(state)
       .filter(([key]) => key !== id)
       .reduce(
@@ -123,7 +132,7 @@ export default createReducer(initialState)
         {} as IListsState,
       ),
   )
-  .handleAction(actions.addTodo, (state, { payload: { listId, todoId, text } }) => {
+  .handleAction(addTodo, (state, { payload: { listId, todoId, text } }) => {
     const list = state[listId] && state[listId].local;
     if (!list) {
       return state;
@@ -150,7 +159,7 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.deleteTodo, (state, { payload: { listId, todoId } }) => {
+  .handleAction(deleteTodo, (state, { payload: { listId, todoId } }) => {
     const list = state[listId] && state[listId].local;
     if (!list) {
       return state;
@@ -170,7 +179,7 @@ export default createReducer(initialState)
       },
     };
   })
-  .handleAction(actions.toggleTodo, (state, { payload: { listId, todoId } }) => {
+  .handleAction(toggleTodo, (state, { payload: { listId, todoId } }) => {
     const list = state[listId] && state[listId].local;
     if (!list) {
       return state;

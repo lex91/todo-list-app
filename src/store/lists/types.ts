@@ -1,3 +1,5 @@
+import { ActionType } from 'typesafe-actions';
+
 import { ITodoList } from 'models/todoList';
 import { WithHash } from 'utils/hashable';
 
@@ -12,3 +14,5 @@ export interface IListState {
   hasLocalChanges?: boolean;
   hasRemoteChanges?: boolean;
 }
+
+export type IListsActionType = ActionType<typeof import('./actions')>;

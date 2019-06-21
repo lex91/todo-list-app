@@ -4,15 +4,15 @@ import uuid from 'uuid/v4';
 
 import { ITodoList } from 'models/todoList';
 import { IRootState } from 'store';
-import { actions } from 'store/lists';
+import { addTodo, deleteTodo, toggleTodo } from 'store/lists';
 import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 
 import TodoListComponent from './TodoListComponent';
 
 const actionCreators = {
-  addTodo: actions.addTodo,
-  deleteTodo: actions.deleteTodo,
-  toggleTodo: actions.toggleTodo,
+  addTodo,
+  deleteTodo,
+  toggleTodo,
 };
 
 interface IOwnProps {

@@ -7,12 +7,20 @@ import { hash } from 'utils/hashable';
 import { IThunkAction } from 'utils/redux';
 
 import { selectLocalTodoList, selectRemoteTodoList } from './selectors';
-import { actions } from './actions';
+import {
+  updateRemoteTodoList,
+  saveTodoList,
+  waitForRemoteTodoList,
+  clearListState,
+} from './actions';
 
-const watchList = (listId: string): IThunkAction<() => void> => dispatch =>
-  watchListDb(listId, data => dispatch(actions.updateRemoteTodoList(data)));
+export const watchList = (listId: string): IThunkAction<() => void> => dispatch =>
+  watchListDb(listId, data => dispatch(updateRemoteTodoList(data)));
 
-const saveList = (listId: string): IThunkAction<Promise<boolean>> => async (dispatch, getState) => {
+export const saveList = (listId: string): IThunkAction<Promise<boolean>> => async (
+  dispatch,
+  getState,
+) => {
   let isTransactionSucceeded = false;
   const state = getState();
 
@@ -25,7 +33,7 @@ const saveList = (listId: string): IThunkAction<Promise<boolean>> => async (disp
   const prevHash = remoteList ? remoteList._hash : undefined;
   const hashedLocalList = hash(localList);
 
-  dispatch(actions.saveTodoList.request(hashedLocalList));
+  dispatch(saveTodoList.request(hashedLocalList));
 
   // TODO: move try-catch to `database`?
   try {
@@ -35,16 +43,16 @@ const saveList = (listId: string): IThunkAction<Promise<boolean>> => async (disp
   }
 
   if (isTransactionSucceeded) {
-    dispatch(actions.saveTodoList.success(hashedLocalList));
+    dispatch(saveTodoList.success(hashedLocalList));
   } else {
-    dispatch(actions.saveTodoList.failure(hashedLocalList));
+    dispatch(saveTodoList.failure(hashedLocalList));
   }
 
   return isTransactionSucceeded;
 };
 
-const loadList = (listId: string): IThunkAction<Promise<boolean>> => async dispatch => {
-  dispatch(actions.waitForRemoteTodoList(listId));
+export const loadList = (listId: string): IThunkAction<Promise<boolean>> => async dispatch => {
+  dispatch(waitForRemoteTodoList(listId));
 
   let result = null;
   // TODO: move try-catch to `database`?
@@ -55,16 +63,10 @@ const loadList = (listId: string): IThunkAction<Promise<boolean>> => async dispa
   }
 
   if (result) {
-    dispatch(actions.updateRemoteTodoList(result));
+    dispatch(updateRemoteTodoList(result));
   } else {
-    dispatch(actions.clearListState(listId));
+    dispatch(clearListState(listId));
   }
 
   return Boolean(result);
-};
-
-export const epics = {
-  watchList,
-  saveList,
-  loadList,
 };
