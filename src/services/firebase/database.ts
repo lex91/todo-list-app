@@ -1,5 +1,6 @@
 import { ITodoList } from 'models/todoList';
 import { WithHash } from 'utils/hashable';
+import { isObject } from 'utils/object';
 
 import { firestore as db } from './app';
 
@@ -44,3 +45,8 @@ export const watchList = (
         onUpdate(snapshot.data() as WithHash<ITodoList>);
       }
     }, console.warn);
+
+export const isNetworkError = (e: any) =>
+  ((isObject(e) as unknown) as Record<string, any>) &&
+  e.name === 'FirebaseError' &&
+  e.code === 'unavailable';

@@ -11,9 +11,12 @@ const initialState: INetworkState = {
 const MAX_NETWORK_PROBLEMS_COUNT = 5;
 
 export default createReducer(initialState)
-  .handleAction(setOnline, (state, { payload: isOnline }) => ({ ...state, isOnline }))
+  .handleAction(setOnline, (state, { payload: isOnline }) => ({
+    lastNetworkProblemsCount: 0,
+    isOnline,
+  }))
   .handleAction(registerNetworkFail, state => ({
-    isOnline: state.isOnline && state.lastNetworkProblemsCount >= MAX_NETWORK_PROBLEMS_COUNT,
+    isOnline: state.isOnline && state.lastNetworkProblemsCount < MAX_NETWORK_PROBLEMS_COUNT,
     lastNetworkProblemsCount: state.lastNetworkProblemsCount + 1,
   }))
   .handleAction(registerNetworkSuccess, () => ({

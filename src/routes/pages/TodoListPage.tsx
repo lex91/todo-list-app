@@ -8,7 +8,6 @@ import { loadList, selectLocalTodoList } from 'store/lists';
 import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 import { ITodoList } from 'models/todoList';
 import AppLayout from 'components/AppLayout';
-import TopBar from 'components/TopBar';
 import TodoList from 'components/TodoList';
 
 const actionCreators = { loadList };
@@ -38,17 +37,14 @@ const TodoListPage: React.FC<IProps> = ({ match, loadList, list }) => {
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <AppLayout
-      topBar={<TopBar />}
-      content={
-        list ? (
-          <TodoList list={list} />
-        ) : (
-          // TODO: Add better UI for `loading` and `loadFailed` states
-          <Typography variant="h4">{loadFailed ? 'Load failed' : 'List is loading'}</Typography>
-        )
-      }
-    />
+    <AppLayout>
+      {list ? (
+        <TodoList list={list} />
+      ) : (
+        // TODO: Add better UI for `loading` and `loadFailed` states
+        <Typography variant="h4">{loadFailed ? 'Load failed' : 'List is loading'}</Typography>
+      )}
+    </AppLayout>
   );
 };
 

@@ -1,20 +1,21 @@
 import React from 'react';
-import { AppBar, Container, Toolbar } from '@material-ui/core';
+import { AppBar, Container } from '@material-ui/core';
+
+import TopBar from 'components/TopBar';
 
 interface IProps {
-  topBar: React.ReactNode;
-  content: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const AppLayout: React.FC<IProps> = ({ topBar, content }) => (
+const AppLayout: React.FC<IProps> = ({ children }) => (
   <>
     <AppBar color="primary" position="sticky">
       <Container maxWidth="lg">
-        <Toolbar>{topBar}</Toolbar>
+        <TopBar />
       </Container>
     </AppBar>
 
-    <Container maxWidth="lg">{content}</Container>
+    <Container maxWidth="lg">{children}</Container>
   </>
 );
 

@@ -2,6 +2,7 @@ import {
   watchList as watchListDb,
   setList as setListDb,
   getList as getListDb,
+  isNetworkError,
 } from 'services/firebase/database';
 import { hash } from 'utils/hashable';
 import { IThunkAction } from 'utils/redux';
@@ -13,6 +14,7 @@ import {
   waitForRemoteTodoList,
   clearListState,
 } from './actions';
+import { registerNetworkFail, registerNetworkSuccess } from '../network';
 
 export const watchList = (listId: string): IThunkAction<() => void> => dispatch =>
   watchListDb(listId, data => dispatch(updateRemoteTodoList(data)));
@@ -35,11 +37,13 @@ export const saveList = (listId: string): IThunkAction<Promise<boolean>> => asyn
 
   dispatch(saveTodoList.request(hashedLocalList));
 
-  // TODO: move try-catch to `database`?
   try {
     isTransactionSucceeded = await setListDb(hashedLocalList, prevHash);
+    dispatch(registerNetworkSuccess());
   } catch (error) {
-    // Firebase Error, just leave `isTransactionSucceded` in false state
+    if (isNetworkError(error)) {
+      dispatch(registerNetworkFail());
+    }
   }
 
   if (isTransactionSucceeded) {
@@ -55,11 +59,14 @@ export const loadList = (listId: string): IThunkAction<Promise<boolean>> => asyn
   dispatch(waitForRemoteTodoList(listId));
 
   let result = null;
-  // TODO: move try-catch to `database`?
+
   try {
     result = await getListDb(listId);
+    dispatch(registerNetworkSuccess());
   } catch (error) {
-    // Firebase Error, just leave `result` in null state
+    if (isNetworkError(error)) {
+      dispatch(registerNetworkFail());
+    }
   }
 
   if (result) {

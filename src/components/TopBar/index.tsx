@@ -1,19 +1,30 @@
 import React from 'react';
-import { Grid, Typography, Box } from '@material-ui/core';
+import { Typography, Toolbar, Box, makeStyles } from '@material-ui/core';
+import NetworkStatus from 'components/NetworkStatus';
 
 interface IProps {}
 
-const TopBar: React.FC<IProps> = () => (
-  <Grid container justify="space-between">
-    <Grid item>
+const TopBar: React.FC<IProps> = () => {
+  const classes = useStyles();
+  return (
+    <Toolbar>
       <Typography variant="h4">TODO List Application</Typography>
-    </Grid>
-    <Grid item>
-      <Box style={{ display: 'inline-block' }}>
-        <Typography>Login, etc</Typography>
+      <div className={classes.grow} />
+      <Typography>Login, etc</Typography>
+      <Box className={classes.networkStatus}>
+        <NetworkStatus />
       </Box>
-    </Grid>
-  </Grid>
-);
+    </Toolbar>
+  );
+};
+
+const useStyles = makeStyles(theme => ({
+  grow: {
+    flexGrow: 1,
+  },
+  networkStatus: {
+    marginLeft: theme.spacing(2),
+  },
+}));
 
 export default TopBar;
