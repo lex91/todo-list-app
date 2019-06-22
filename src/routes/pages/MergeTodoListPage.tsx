@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button } from '@material-ui/core';
+import { Button, Paper, Typography } from '@material-ui/core';
 
 import { IRootState } from 'store';
 import { selectLocalTodoList } from 'store/lists';
@@ -30,15 +30,19 @@ const MergeTodoListPage: React.FC<IProps> = ({ list, match, history }) => {
   return (
     <AppLayout>
       {list ? (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            history.goBack();
-          }}
-        >
-          TODO
-        </Button>
+        <Paper>
+          <Typography variant="h3">This page is under construction :(</Typography>
+          <Button
+            size="large"
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              history.goBack();
+            }}
+          >
+            Go back
+          </Button>
+        </Paper>
       ) : null}
     </AppLayout>
   );
