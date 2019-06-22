@@ -7,14 +7,15 @@ import {
 import { hash } from 'utils/hashable';
 import { IThunkAction } from 'utils/redux';
 
-import { selectLocalTodoList, selectRemoteTodoList } from './selectors';
 import {
   updateRemoteTodoList,
   saveTodoList,
   waitForRemoteTodoList,
   clearListState,
-} from './actions';
-import { registerNetworkFail, registerNetworkSuccess } from '../network';
+  selectLocalTodoList,
+  selectRemoteTodoList,
+} from './lists';
+import { registerNetworkFail, registerNetworkSuccess } from './network';
 
 export const watchList = (listId: string): IThunkAction<() => void> => dispatch =>
   watchListDb(listId, data => dispatch(updateRemoteTodoList(data)));
@@ -76,4 +77,12 @@ export const loadList = (listId: string): IThunkAction<Promise<boolean>> => asyn
   }
 
   return Boolean(result);
+};
+
+export const appInit = (): IThunkAction<Promise<void>> => async (dispatch, getState) => {
+  Object.entries(getState().lists).forEach(([_key, listState]) => {
+    if (listState.pending) {
+      dispatch(saveTodoList.failure(listState.pending));
+    }
+  });
 };

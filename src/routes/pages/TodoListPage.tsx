@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 
 import { IRootState } from 'store';
-import { loadList, selectLocalTodoList } from 'store/lists';
+import { selectLocalTodoList } from 'store/lists';
+import { loadList } from 'store/epics';
 import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 import { ITodoList } from 'models/todoList';
 import AppLayout from 'components/AppLayout';
@@ -27,6 +28,7 @@ const TodoListPage: React.FC<IProps> = ({ match, loadList, list }) => {
 
   const [loadFailed, setLoadFailed] = useState(false);
 
+  // Loading only once per id
   useEffect(() => {
     setLoadFailed(false);
     if (!list) {

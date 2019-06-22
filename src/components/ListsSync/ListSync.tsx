@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 
 import { bindActionCreators, IBoundActionCreators } from 'utils/redux';
 import { IRootState } from 'store';
-import { watchList, saveList, selectShouldSaveList } from 'store/lists';
+import { selectShouldSaveList } from 'store/lists';
+import { watchList, saveList } from 'store/epics';
 
 const actionCreators = {
   watchList,
