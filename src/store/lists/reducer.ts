@@ -11,6 +11,8 @@ import {
   updateRemoteTodoList,
   clearListState,
   waitForRemoteTodoList,
+  overwriteLocalListState,
+  overwriteRemoteListState,
 } from './actions';
 import { IListsState } from './types';
 
@@ -91,14 +93,15 @@ export default createReducer(initialState)
 
     const shouldReplaceLocalState = !listState.hasLocalChanges && !listState.pending;
     const hasRemoteChanges =
-      listState.remote &&
-      listState.local &&
-      !shouldReplaceLocalState &&
-      !(
-        listState.remote._hash === remoteState._hash ||
-        (listState.pending && listState.pending._hash === remoteState._hash) ||
-        listState.local._hash === remoteState._hash
-      );
+      listState.hasRemoteChanges ||
+      (listState.remote &&
+        listState.local &&
+        !shouldReplaceLocalState &&
+        !(
+          listState.remote._hash === remoteState._hash ||
+          (listState.pending && listState.pending._hash === remoteState._hash) ||
+          listState.local._hash === remoteState._hash
+        ));
 
     return {
       ...state,
@@ -204,6 +207,38 @@ export default createReducer(initialState)
           items,
         }),
         hasLocalChanges: true,
+      },
+    };
+  })
+  .handleAction(overwriteLocalListState, (state, { payload: id }) => {
+    const listState = state[id];
+
+    if (!listState || !listState.remote) {
+      return state;
+    }
+
+    return {
+      ...state,
+      [id]: {
+        ...listState,
+        local: listState.remote,
+        hasLocalChanges: false,
+        hasRemoteChanges: false,
+      },
+    };
+  })
+  .handleAction(overwriteRemoteListState, (state, { payload: id }) => {
+    const listState = state[id];
+
+    if (!listState || !listState.local) {
+      return state;
+    }
+
+    return {
+      ...state,
+      [id]: {
+        ...listState,
+        hasRemoteChanges: false,
       },
     };
   });

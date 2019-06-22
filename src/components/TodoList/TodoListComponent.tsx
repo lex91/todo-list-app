@@ -45,11 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     padding: theme.spacing(2),
   },
-  actionButton: {
-    position: 'absolute',
-    top: theme.spacing(2),
-    right: theme.spacing(2),
-  },
 }));
 
 export default TodoListComponent;

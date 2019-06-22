@@ -36,3 +36,11 @@ export const toggleTodo = createStandardAction('@todo/lists/toggleTodo')<{
   listId: string;
   todoId: string;
 }>();
+
+export const overwriteLocalListState = createStandardAction('@todo/lists/overwriteLocalListState')<
+  string
+>();
+
+export const overwriteRemoteListState = createStandardAction(
+  '@todo/lists/overwriteRemoteListState',
+)<string>();

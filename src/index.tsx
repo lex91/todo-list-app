@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import AppRouter from 'routes/AppRouter';
-import ListsSync from 'components/ListsSync';
 import { store } from 'store';
 
 import * as serviceWorker from './serviceWorker';
@@ -12,7 +11,6 @@ import './index.css';
 ReactDOM.render(
   <Provider store={store}>
     <AppRouter />
-    <ListsSync />
   </Provider>,
   document.getElementById('root'),
 );

@@ -15,4 +15,9 @@ export interface IListState {
   hasRemoteChanges?: boolean;
 }
 
+export interface IListsSyncInfo {
+  conflicts: string[];
+  unsaved: string[];
+}
+
 export type IListsActionType = ActionType<typeof import('./actions')>;
