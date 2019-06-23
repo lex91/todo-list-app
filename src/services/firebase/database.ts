@@ -50,3 +50,8 @@ export const isNetworkError = (e: any) =>
   ((isObject(e) as unknown) as Record<string, any>) &&
   e.name === 'FirebaseError' &&
   e.code === 'unavailable';
+
+export const isPermissionError = (e: any) =>
+  ((isObject(e) as unknown) as Record<string, any>) &&
+  e.name === 'FirebaseError' &&
+  e.code === 'permission-denied';

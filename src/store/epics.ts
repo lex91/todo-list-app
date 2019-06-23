@@ -3,7 +3,9 @@ import {
   setList as setListDb,
   getList as getListDb,
   isNetworkError,
+  isPermissionError,
 } from 'services/firebase/database';
+import { auth } from 'services/firebase/app';
 import { hash } from 'utils/hashable';
 import { IThunkAction } from 'utils/redux';
 
@@ -16,6 +18,7 @@ import {
   selectRemoteTodoList,
 } from './lists';
 import { registerNetworkFail, registerNetworkSuccess } from './network';
+import { setIsAuthenticated } from './auth';
 
 export const watchList = (listId: string): IThunkAction<() => void> => dispatch =>
   watchListDb(listId, data => dispatch(updateRemoteTodoList(data)));
@@ -44,6 +47,8 @@ export const saveList = (listId: string): IThunkAction<Promise<boolean>> => asyn
   } catch (error) {
     if (isNetworkError(error)) {
       dispatch(registerNetworkFail());
+    } else if (isPermissionError(error)) {
+      dispatch(setIsAuthenticated(false));
     }
   }
 
@@ -67,6 +72,8 @@ export const loadList = (listId: string): IThunkAction<Promise<boolean>> => asyn
   } catch (error) {
     if (isNetworkError(error)) {
       dispatch(registerNetworkFail());
+    } else if (isPermissionError(error)) {
+      dispatch(setIsAuthenticated(false));
     }
   }
 
@@ -84,5 +91,9 @@ export const appInit = (): IThunkAction<Promise<void>> => async (dispatch, getSt
     if (listState.pending) {
       dispatch(saveTodoList.failure(listState.pending));
     }
+  });
+
+  auth.onAuthStateChanged(user => {
+    dispatch(setIsAuthenticated(Boolean(user)));
   });
 };

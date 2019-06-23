@@ -3,6 +3,7 @@ import { Typography, Toolbar, Box, makeStyles } from '@material-ui/core';
 
 import NetworkStatus from 'components/NetworkStatus';
 import ListsSync from 'components/ListsSync';
+import AuthStatus from 'components/AuthStatus';
 
 interface IProps {}
 
@@ -20,7 +21,7 @@ const TopBar: React.FC<IProps> = () => {
         <NetworkStatus />
       </Box>
       <Box className={classes.toolbarItem}>
-        <Typography>Login, etc</Typography>
+        <AuthStatus />
       </Box>
     </Toolbar>
   );
