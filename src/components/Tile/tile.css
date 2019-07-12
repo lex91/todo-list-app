@@ -1,0 +1,29 @@
+.Tile {
+  margin: 40px;
+  border: 2px solid darkred;
+  background-color: darkcyan;
+  height: 320px;
+  width: 180px;
+  box-sizing: border-box;
+  float: left;
+}
+
+.Tile:hover {
+  border-color: red;
+  background: url('../Tile/img.jpg');
+}
+
+.Tile-content {
+  bottom: 20px;
+  margin: 15px;
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: left;
+}
+
+.Tile-content h1 {
+  font-weight: 600;
+}
+
+.Tile-content h2 {
+  font-weight: 400;
+}

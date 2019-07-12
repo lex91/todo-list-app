@@ -1,0 +1,6 @@
+.TileGrid {
+  background-color: lightgrey;
+  width: 100%;
+  text-align: center;
+  overflow: auto;
+}
