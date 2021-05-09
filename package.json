@@ -20,7 +20,7 @@
     "firebase": "^6.1.1",
     "husky": "^2.4.0",
     "lint-staged": "^8.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "prettier": "^1.17.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
